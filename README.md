@@ -46,6 +46,13 @@ To output the byte string in hex representation:
 ct.hex() # or "".join([crytool.byte2hex(b) for b in ct])
 # e.g. '77020C898AA1E8EBA5019CD916D03962'
 ```
+To convert an integer to byte(s):
+```python
+n = 0xAE # some integer
+n.to_bytes(1,byteorder='big')     # convert 0xAE to a byte
+n.to_bytes(5,byteorder='big')     # convert 0xAE into a byte string of 5 bytes representing 0xAE
+n.to_bytes(1,byteorder='big')*5   # output a byte string of byte 0xAE repeating 5 times
+```
 
 *more to come later*
 
