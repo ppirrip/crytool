@@ -54,6 +54,13 @@ n.to_bytes(5,byteorder='big')     # convert 0xAE into a byte string of 5 bytes r
 n.to_bytes(1,byteorder='big')*5   # output a byte string of byte 0xAE repeating 5 times
 ```
 
+To combine (i.e. reduce) a list of bytes to one long byte string:
+```python
+import functools
+a = [n.to_bytes(1,byteorder='big') for n in range(0,5)] # output: [b'\x00', b'\x01', b'\x02', b'\x03', b'\x04']
+functools.reduce(lambda x, y: x + y, a) # output: b'\x00\x01\x02\x03\x04'
+```
+
 *more to come later*
 
 
