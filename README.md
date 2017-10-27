@@ -43,11 +43,11 @@ ct = crytool.xor(pt,key) # stream cipher
 ```
 To output the byte string in hex representation:
 ```python
-"".join([crytool.byte2hex(b) for b in ct])
+ct.hex() # or "".join([crytool.byte2hex(b) for b in ct])
 # e.g. '77020C898AA1E8EBA5019CD916D03962'
 ```
 
-* more to come later *
+*more to come later*
 
 
 
