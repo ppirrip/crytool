@@ -15,6 +15,8 @@ from Crypto import Random
 from Crypto.Util import Counter
 from Crypto.Hash import SHA256
 
+from math import *
+
 
 # just an alias for a easier to remember name
 def byte2hex(b):
@@ -145,6 +147,130 @@ def validRange(n):
         return n
     else:
         return 0xff
+
+
+#
+# GCD
+# Ref: Number Theory and Cryptography
+# https://www.coursera.org/learn/number-theory-cryptography
+#
+def gcd(a, b):
+  assert a >= 0 and b >= 0 and a + b > 0
+
+  while a > 0 and b > 0:
+    if a >= b:
+      a = a % b
+    else:
+      b = b % a
+
+  return max(a, b)
+
+
+#
+# Extended GCD
+# Ref: Number Theory and Cryptography
+# https://www.coursera.org/learn/number-theory-cryptography
+#
+def extended_gcd(a, b):
+  assert a >= b and b >= 0 and a + b > 0
+
+  if b == 0:
+    d, x, y = a, 1, 0
+  else:
+    (d, p, q) = extended_gcd(b, a % b)
+    x = q
+    y = p - q * (a // b)
+
+  assert a % d == 0 and b % d == 0
+  assert d == a * x + b * y
+  return (d, x, y)
+
+#
+# LCM
+# Ref: Number Theory and Cryptography
+# https://www.coursera.org/learn/number-theory-cryptography
+#
+def lcm(n, m):
+    if n >= m:
+        (d, x, y) = extended_gcd(n,m)
+    else:
+        (d, x, y) = extended_gcd(m,n)
+    return (n * m) / d
+
+#
+# Integer Division
+# Ref: Number Theory and Cryptography
+# https://www.coursera.org/learn/number-theory-cryptography
+#
+def divide(a, b, n):
+    assert n > 1 and a > 0 and gcd(a, n) == 1
+    
+    if a >= n:
+        (d, p, q) = extended_gcd(a,n)
+    else:
+        (d, q, p) = extended_gcd(n,a)
+  
+    # solving diophantine
+    c = 1 # constant  
+    tmp = c // d
+    s = tmp * p # this is the multiplicative inv of a mod n
+    t = tmp * q
+ 
+    x = (b * s) % n
+  
+    # return the number x s.t. x = b / a (mod n) and 0 <= x <= n-1.
+    return x
+
+#
+# Chinese Remainder Theorem
+# Ref: Number Theory and Cryptography
+# https://www.coursera.org/learn/number-theory-cryptography
+#
+# TODO: Extend this to n equations
+#
+def crt(n1, r1, n2, r2):
+    if n1 >= n2:
+        (d, s, t) = extended_gcd(n1, n2)
+    else:
+        (d, t, s) = extended_gcd(n2, n1)
+
+    #print(n1 * s * r1)
+    #print(n2* t * r2)
+
+    n = n1 * s * r2 + n2 * t * r1
+
+    #print(n)
+
+    return n % (n1 * n2)
+
+# NOTE:
+# add this to the code
+# a^n == ( a^(n % (p-1)  ) ) mod p
+def exp2k(b,e,m):
+    k = int(log2(e))
+    c = b % m
+    for i in range(0,k):
+        c = (c * c) % m
+    return c
+
+#
+# Fast Modular Exponentiation
+# Ref: Number Theory and Cryptography
+# https://www.coursera.org/learn/number-theory-cryptography
+#
+def FastModExp(b, e, m):
+    bNum = "{0:b}".format(e)
+    l = len(bNum)
+    c = 1
+    for i in range(0,l):
+        if bNum[i] == '1':
+            ee = 2 ** (l-i-1)
+            c = (c * exp2k(b,ee,m)) % m
+        else:
+            pass
+
+    return c
+
 
 #
 # Test cases 
